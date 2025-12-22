@@ -1,6 +1,6 @@
 from pyspark.sql.functions import col
 from pyspark import pipelines as dp
-from project_sdp.src.project_sdp_etl.schemas.bronze import schema_clientes
+from project_sdp.src.project_sdp_etl.schemas.bronze.clientes import schema_clientes
 
 @dp.table(
     name="clientes_raw",
