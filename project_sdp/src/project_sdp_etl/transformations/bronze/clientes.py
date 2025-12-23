@@ -1,6 +1,7 @@
-from pyspark.sql.functions import col
+from pyspark.sql.functions import col, lit, current_timestamp
 from pyspark import pipelines as dp
 from project_sdp.src.project_sdp_etl.schemas.bronze.clientes import schema_clientes
+
 
 @dp.table(
     name="clientes_raw",
@@ -20,7 +21,9 @@ def bronze_table():
         .option("header", True)
         .option("delimiter", ",")
         .schema(schema_clientes())
-        .load("/Volumes/sdp/default/landing/clientes.csv")
+        .load("/Volumes/sdp/default/landing")
+        .withColumn("ingest_at", current_timestamp())
+        .withColumn("metadata", col("_metadata"))
     )
 
     return df_reader
