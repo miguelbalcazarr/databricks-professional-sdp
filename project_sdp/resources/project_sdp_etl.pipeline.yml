@@ -4,8 +4,8 @@ resources:
   pipelines:
     project_sdp_etl:
       name: project_sdp_etl
-      catalog: ${var.catalog}
-      schema: ${var.schema}
+      catalog: ${var.catalog_prd}
+      schema: ${var.schema_bronze_prd}
       serverless: true
       root_path: "../src/project_sdp_etl"
 
