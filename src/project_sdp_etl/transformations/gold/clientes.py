@@ -3,12 +3,12 @@ from pyspark.sql.functions import col, date_trunc, count
 
 
 @dp.materialized_view(
-    name="clientes_resumen_mensual",
+    name="dbassociate.gold.clientes_resumen_mensual",
     comment="Tabla Gold: conteo de clientes por ciudad y mes de registro",
     table_properties={"quality": "gold"},
 )
 def gold_clientes_resumen_mensual():
-    df = spark.read.table("clientes")
+    df = spark.read.table("dbassociate.silver.clientes")
 
     return (
         df.filter(col("ciudad").isNotNull() & col("fecha_registro").isNotNull())

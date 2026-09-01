@@ -2,8 +2,8 @@ from pyspark import pipelines as dp
 from pyspark.sql.functions import initcap, trim, col, when, lower, lit, current_timestamp
 from pyspark.sql.types import LongType, StringType, DateType
 from datetime import datetime
-from project_sdp.src.project_sdp_etl.schemas.silver.clientes import schema_clientes
-from project_sdp.src.project_sdp_etl.utils.utils import parse_fecha_registro_safe
+from src.project_sdp_etl.schemas.silver.clientes import schema_clientes
+from src.project_sdp_etl.utils.utils import parse_fecha_registro_safe
 
 
 valid_expects = {
@@ -25,7 +25,7 @@ def staging_clientes():
     today = datetime.now().date()
 
     df = (
-        spark.readStream.table("sdp.bronze.clientes_raw")
+        spark.readStream.table("dbassociate.bronze.clientes_raw")
         .withColumn("nombre", initcap(trim(col("nombre"))))
         .withColumn(
             "ciudad",
@@ -64,13 +64,13 @@ def staging_clientes():
     return df
 
 dp.create_streaming_table(
-    name="clientes",
+    name="dbassociate.silver.clientes",
     comment="Estado actual de clientes VÁLIDOS (SCD Tipo 1)",
     schema=schema_clientes()
 )
 
 dp.create_auto_cdc_flow(
-    target="clientes",
+    target="dbassociate.silver.clientes",
     source="view_clientes",
     keys=["id_cliente"],
     sequence_by="updated_at",

@@ -1,10 +1,10 @@
 from pyspark.sql.functions import col, lit, current_timestamp
 from pyspark import pipelines as dp
-from project_sdp.src.project_sdp_etl.schemas.bronze.clientes import schema_clientes
+from src.project_sdp_etl.schemas.bronze.clientes import schema_clientes
 
 
 @dp.table(
-    name="clientes_raw",
+    name="dbassociate.bronze.clientes_raw",
     comment="Tabla Bronze clientes_raw",
     table_properties={
         "quality": "bronze",
@@ -21,7 +21,7 @@ def bronze_table():
         .option("header", True)
         .option("delimiter", ",")
         .schema(schema_clientes())
-        .load("/Volumes/sdp/default/landing")
+        .load("/Volumes/dbassociate/default/vol_landing/sesion_09/")
         .withColumn("ingest_at", current_timestamp())
         .withColumn("metadata", col("_metadata"))
     )
